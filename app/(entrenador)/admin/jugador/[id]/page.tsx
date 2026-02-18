@@ -1,4 +1,5 @@
 
+import React from 'react';
 import { createClient } from '@/lib/supabase/server';
 import EvolucionChart from '@/components/jugador/EvolucionChart';
 import { ArrowLeftIcon } from '@heroicons/react/24/solid';

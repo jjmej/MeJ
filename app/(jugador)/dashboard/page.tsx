@@ -3,10 +3,8 @@ import React from "react";
 import { createClient } from "@/lib/supabase/server";
 // FIX: Correct Link import and use it for navigation instead of `a` tag.
 import Link from "next/link";
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts';
-
-const feelingToValue = { 1: '😞', 2: '😐', 3: '🙂', 4: '😄' };
-const valueToColor = { 1: '#F97316', 2: '#EAB308', 3: '#22C55E', 4: '#3B82F6' };
+// FIX: Moved EmotionChart to a client component file and importing it here.
+import { EmotionChart } from "@/components/jugador/EvolucionChart";
 
 const ModuleCard: React.FC<{ to: string; title: string; color: string; icon: string }> = ({ to, title, color, icon }) => (
   // Link component from Next.js is used here
@@ -18,25 +16,6 @@ const ModuleCard: React.FC<{ to: string; title: string; color: string; icon: str
   </Link>
 );
 
-
-// Recharts components must be client-side
-const EmotionChart = ({ data }: { data: any[] }) => {
-    'use client';
-    return (
-        <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={data}>
-            <XAxis dataKey="day" stroke="#94A3B8" />
-            <YAxis domain={[0, 4]} tick={false} axisLine={false} />
-            <Tooltip contentStyle={{ backgroundColor: '#0F172A', border: '1px solid #334155' }} />
-            <Bar dataKey="feelingValue">
-                {data.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={valueToColor[entry.feelingValue as keyof typeof valueToColor]} />
-                ))}
-            </Bar>
-            </BarChart>
-        </ResponsiveContainer>
-    );
-}
 
 export default async function DashboardPage() {
     const supabase = createClient();

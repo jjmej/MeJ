@@ -1,7 +1,7 @@
-
 'use client'
 import React from 'react';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+// FIX: Add BarChart, Bar, Cell for EmotionChart component.
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, BarChart, Bar, Cell } from 'recharts';
 
 interface Checkin {
     fecha: string;
@@ -13,6 +13,26 @@ interface Checkin {
 
 interface EvolucionChartProps {
     checkins: Checkin[];
+}
+
+// FIX: Moved EmotionChart from dashboard page to this client component file to fix 'use client' directive issue.
+const valueToColor: { [key: number]: string } = { 1: '#F97316', 2: '#EAB308', 3: '#22C55E', 4: '#3B82F6' };
+
+export const EmotionChart = ({ data }: { data: any[] }) => {
+    return (
+        <ResponsiveContainer width="100%" height="100%">
+            <BarChart data={data}>
+            <XAxis dataKey="day" stroke="#94A3B8" />
+            <YAxis domain={[0, 4]} tick={false} axisLine={false} />
+            <Tooltip contentStyle={{ backgroundColor: '#0F172A', border: '1px solid #334155' }} />
+            <Bar dataKey="feelingValue">
+                {data.map((entry, index) => (
+                <Cell key={`cell-${index}`} fill={valueToColor[entry.feelingValue as keyof typeof valueToColor]} />
+                ))}
+            </Bar>
+            </BarChart>
+        </ResponsiveContainer>
+    );
 }
 
 const EvolucionChart: React.FC<EvolucionChartProps> = ({ checkins }) => {

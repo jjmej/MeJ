@@ -33,6 +33,8 @@ async function getTeamData(coachId: string) {
     return data;
 }
 
+const emojiMap: { [key: number]: string } = {1:'😞', 2:'😐', 3:'🙂', 4:'😄'};
+
 const PlayerCard: React.FC<{ player: any }> = ({ player }) => {
     // Lógica de Alertas
     const lastCheckin = player.checkins?.[0];
@@ -71,7 +73,7 @@ const PlayerCard: React.FC<{ player: any }> = ({ player }) => {
                 <div className="mt-4 pt-4 border-t border-slate-700 text-sm">
                     <p className="font-semibold mb-1">Último Check-in ({new Date(lastCheckin.fecha).toLocaleDateString()}):</p>
                     <div className="grid grid-cols-2 gap-x-4">
-                        <p>Emoji: {{1:'😞', 2:'😐', 3:'🙂', 4:'😄'}[lastCheckin.estado_emoji]}</p>
+                        <p>Emoji: {emojiMap[lastCheckin.estado_emoji]}</p>
                         <p>Estrés: {lastCheckin.nivel_estres}/5</p>
                         <p>Energía: {lastCheckin.nivel_energia}/5</p>
                         <p>Ganas: {lastCheckin.ganas_entrenar}/5</p>
