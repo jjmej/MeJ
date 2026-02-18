@@ -1,4 +1,3 @@
-
 'use server'
 
 import { createClient } from '@/lib/supabase/server'
@@ -15,8 +14,10 @@ export async function login(formData: FormData) {
   })
 
   if (error) {
-    console.error(error)
-    return redirect('/auth/login?message=Could not authenticate user')
+    console.error('Login error:', error.message)
+    // Redirige con el mensaje de error específico para que el usuario sepa qué pasó.
+    const errorMessage = encodeURIComponent(error.message);
+    return redirect(`/auth/login?message=${errorMessage}`)
   }
 
   return redirect('/')
