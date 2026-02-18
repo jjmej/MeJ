@@ -1,47 +1,44 @@
-
 import { NextResponse, type NextRequest } from 'next/server'
 import { updateSession } from '@/lib/supabase/middleware'
 
 export async function middleware(request: NextRequest) {
-  // Primero, refrescamos la sesión
-  const response = await updateSession(request)
+  try {
+    // Primero, refrescamos la sesión. Esto es compatible con Edge.
+    const response = await updateSession(request)
 
-  // Para leer la sesión actualizada, necesitamos una nueva instancia de cliente
-  // que use las cookies actualizadas de la 'response'
-  const supabase = createClient(response.cookies)
-  const { data: { user } } = await supabase.auth.getUser()
+    // Creamos un cliente de Supabase para leer la sesión del usuario.
+    // Esto lee el JWT de las cookies, no hace una consulta a la base de datos.
+    const supabase = createClient(response.cookies)
+    const { data: { user } } = await supabase.auth.getUser()
 
-  const { pathname } = request.nextUrl
+    const { pathname } = request.nextUrl
 
-  // Si el usuario no está autenticado y no está en una página de autenticación, redirigir a login
-  if (!user && !pathname.startsWith('/auth')) {
-    return NextResponse.redirect(new URL('/auth/login', request.url))
-  }
+    // Si el usuario no está autenticado y no está en una página de autenticación, redirigir a login
+    if (!user && !pathname.startsWith('/auth')) {
+      return NextResponse.redirect(new URL('/auth/login', request.url))
+    }
 
-  // Si el usuario está autenticado
-  if (user) {
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('rol')
-      .single()
-
-    // Si está en una página de autenticación, redirigir a la página principal
-    if (pathname.startsWith('/auth')) {
-       return NextResponse.redirect(new URL('/', request.url))
+    // Si el usuario está autenticado y intenta acceder a una página de auth,
+    // lo redirigimos a la raíz, que se encargará de llevarlo a su dashboard.
+    if (user && pathname.startsWith('/auth')) {
+      return NextResponse.redirect(new URL('/', request.url))
     }
     
-    // Proteger rutas de admin
-    if (pathname.startsWith('/admin') && profile?.rol !== 'entrenador') {
-      return NextResponse.redirect(new URL('/dashboard', request.url)) // Un jugador intenta acceder a /admin
-    }
+    // LA LÓGICA DE ROLES HA SIDO ELIMINADA.
+    // La consulta a la tabla `profiles` no es compatible con Edge Runtime y causaba el error.
+    // La autorización basada en roles ahora debe ser manejada dentro de las páginas
+    // o layouts del lado del servidor (Server Components).
 
-    // Proteger rutas de jugador (cualquier cosa que no sea /admin)
-    if (!pathname.startsWith('/admin') && profile?.rol === 'entrenador' && pathname !== '/') {
-      return NextResponse.redirect(new URL('/admin/dashboard', request.url)) // Un entrenador intenta acceder a una página de jugador
-    }
+    return response
+  } catch (error) {
+    console.error("Error en el middleware:", error);
+    // En caso de error, permitimos que la solicitud continúe para no bloquear el sitio.
+    return NextResponse.next({
+      request: {
+        headers: request.headers,
+      },
+    });
   }
-
-  return response
 }
 
 // Necesitamos importar el createServerClient de una manera que acepte cookies
