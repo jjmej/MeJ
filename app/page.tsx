@@ -17,12 +17,13 @@ export default async function HomePage() {
     .single();
   
   if (profile?.rol === 'jugador') {
-    redirect('/dashboard'); // Se resolverá a /(jugador)/dashboard
+    redirect('/dashboard');
   } else if (profile?.rol === 'entrenador') {
-    redirect('/dashboard'); // Se resolverá a /(entrenador)/dashboard
+    redirect('/admin/dashboard');
   } else {
-    // Caso improbable, perfil no encontrado o sin rol
-    redirect('/auth/login');
+    // Si el perfil no se ha creado o no tiene rol, va a la página de onboarding/configuración.
+    // Esto es un fallback por si el registro falla a mitad.
+    redirect('/onboarding');
   }
 
   return null; // Esta página nunca renderiza UI

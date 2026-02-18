@@ -15,8 +15,8 @@ export default async function LoginPage() {
         <div className="max-w-md w-full">
             <h1 className="text-4xl md:text-5xl font-bold text-white mb-2">Iniciar Sesión</h1>
             <p className="text-lg text-slate-300 mb-8">Bienvenido/a de vuelta a Mente en Juego</p>
-            {/* FIX: The form 'action' prop was causing a type error. Using 'formAction' on the button instead. */}
-            <form className="w-full space-y-4">
+            {/* FIX: The form 'action' prop should be on the form element for server actions. */}
+            <form action={login} className="w-full space-y-4">
                 <label className="sr-only" htmlFor="email">Email</label>
                 <input
                     className="w-full bg-dark-card border border-slate-600 text-white rounded-lg p-3 text-center text-lg"
@@ -32,7 +32,7 @@ export default async function LoginPage() {
                     placeholder="••••••••"
                     required
                 />
-                <button type="submit" formAction={login} className="w-full bg-brand-blue hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg text-xl transition-colors !mt-6">
+                <button type="submit" className="w-full bg-brand-blue hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg text-xl transition-colors !mt-6">
                     Entrar
                 </button>
             </form>
