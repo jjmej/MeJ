@@ -1,6 +1,8 @@
+
 'use server'
 
 import { createClient } from '@/lib/supabase/server'
+import { createAdminClient } from '@/lib/supabase/admin'
 import { redirect } from 'next/navigation'
 import { headers } from 'next/headers'
 
@@ -17,6 +19,7 @@ export async function signup(formData: FormData) {
   const deporte = data.deporte as string;
   const club = data.club as string;
 
+  // 1. Create the user in the 'auth.users' table
   const { data: { user }, error: signUpError } = await supabase.auth.signUp({
     email,
     password,
@@ -27,9 +30,13 @@ export async function signup(formData: FormData) {
 
   if (signUpError || !user) {
     console.error("Sign up error:", signUpError)
-    const errorMessage = encodeURIComponent(signUpError?.message || 'No se pudo registrar al usuario');
+    const errorMessage = encodeURIComponent(signUpError?.message || 'No se pudo registrar al usuario.');
     return redirect(`/auth/register?message=${errorMessage}`)
   }
+
+  // 2. Use the admin client to securely insert the profile, bypassing RLS.
+  // This is necessary because the user is not logged in yet (due to email confirmation).
+  const supabaseAdmin = createAdminClient();
 
   let profileData: any = {
     id: user.id,
@@ -38,7 +45,7 @@ export async function signup(formData: FormData) {
     nombre,
     deporte,
     club,
-    acepta_notas_visibles: true // Valor por defecto
+    acepta_notas_visibles: false, // Safer default
   };
 
   if (rol === 'jugador') {
@@ -51,34 +58,44 @@ export async function signup(formData: FormData) {
 
     const codigo_entrenador = data.codigo_entrenador as string;
     if (codigo_entrenador) {
-        const { data: coachProfile } = await supabase
+        const { data: coachProfile } = await supabaseAdmin
             .from('profiles')
             .select('id')
-            .eq('codigo_entrenador', codigo_entrenador)
+            .eq('codigo_entrenador', codigo_entrenador.trim())
             .eq('rol', 'entrenador')
             .single();
         
         if (coachProfile) {
             profileData.entrenador_id = coachProfile.id;
+        } else {
+             console.warn(`Coach code "${codigo_entrenador}" was provided but not found. User can link later.`);
         }
     }
 
   } else { // entrenador
-    profileData.codigo_entrenador = data.codigo_entrenador as string;
+    const coachCode = data.codigo_entrenador as string;
+    if (!coachCode || coachCode.trim() === '') {
+        const errorMessage = encodeURIComponent('Como entrenador, debes crear un código de equipo único.');
+        // Cleanup the created auth user to allow retrying with the same email
+        await supabaseAdmin.auth.admin.deleteUser(user.id);
+        return redirect(`/auth/register?message=${errorMessage}`);
+    }
+    profileData.codigo_entrenador = coachCode.trim();
   }
   
-  const { error: profileError } = await supabase
+  const { error: profileError } = await supabaseAdmin
     .from('profiles')
     .insert(profileData);
 
   if (profileError) {
     console.error("Profile creation error:", profileError)
-    // Idealmente, aquí se debería borrar el usuario de auth para que pueda reintentar.
-    const errorMessage = encodeURIComponent(`Error al crear el perfil: ${profileError.message}`);
+    // IMPORTANT: If profile creation fails, delete the auth user to prevent orphaned accounts.
+    await supabaseAdmin.auth.admin.deleteUser(user.id);
+    const errorMessage = encodeURIComponent(`Error crítico al crear el perfil. Por favor, inténtalo de nuevo.`);
     return redirect(`/auth/register?message=${errorMessage}`)
   }
 
-  // Redirige a la página de login con un mensaje claro sobre la confirmación de email.
+  // Redirect to the login page with a success message about email confirmation.
   const successMessage = encodeURIComponent('¡Registro completado! Revisa tu email para confirmar tu cuenta antes de iniciar sesión.');
   return redirect(`/auth/login?message=${successMessage}&type=success`)
 }
