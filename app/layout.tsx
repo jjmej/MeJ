@@ -8,7 +8,8 @@ import { UserProvider } from '@/context/UserContext';
 
 const poppins = Poppins({ 
   subsets: ["latin"],
-  weight: ['400', '600', '700']
+  weight: ['400', '600', '700'],
+  variable: '--font-poppins',
 });
 
 export const metadata: Metadata = {
@@ -26,8 +27,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="es" className="h-full bg-dark-bg">
-      <body className={`${poppins.className} h-full text-dark-text antialiased`}>
+    <html lang="es" className={`${poppins.variable} h-full bg-dark-bg`}>
+      <body className="font-sans h-full text-dark-text antialiased">
         <UserProvider>
           {children}
         </UserProvider>
