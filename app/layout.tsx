@@ -1,7 +1,7 @@
 
 // FIX: Import React to be in scope for React.ReactNode type.
 import React from 'react';
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Poppins } from "next/font/google";
 import "./globals.css";
 import { UserProvider } from '@/context/UserContext';
@@ -15,10 +15,11 @@ const poppins = Poppins({
 export const metadata: Metadata = {
   title: "Mente en Juego",
   description: "Plataforma de bienestar mental para jóvenes deportistas.",
-  viewport: {
-    width: 'device-width',
-    initialScale: 1,
-  },
+};
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
 };
 
 export default function RootLayout({
