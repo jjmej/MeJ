@@ -1,3 +1,4 @@
+
 // FIX: Import React to be in scope for JSX.
 import React from "react";
 import { createClient } from "@/lib/supabase/server";
@@ -10,7 +11,7 @@ const ModuleCard: React.FC<{ to: string; title: string; color: string; icon: str
   // Link component from Next.js is used here
   <Link href={to} className={`bg-dark-card p-6 rounded-xl shadow-lg flex flex-col justify-between hover:scale-105 transition-transform border-l-4 ${color}`}>
     <div className="flex items-center justify-between">
-      <h3 className="text-xl font-bold text-white">{title}</h3>
+      <h3 className="text-lg font-bold text-white">{title}</h3>
       <span className="text-3xl">{icon}</span>
     </div>
   </Link>
@@ -53,7 +54,7 @@ export default async function DashboardPage() {
 
     return (
         <div className="space-y-8">
-          <h1 className="text-3xl font-bold text-white">¡Hola, {profile?.nombre}! 👋</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold text-white">¡Hola, {profile?.nombre}! 👋</h1>
           
           {showCheckinReminder && (
               <div className="bg-brand-orange/20 border border-brand-orange text-white p-4 rounded-lg">
@@ -61,7 +62,7 @@ export default async function DashboardPage() {
               </div>
           )}
 
-          <Link href="/checkin" className="block w-full text-center bg-brand-green hover:bg-green-700 text-white font-bold py-4 px-4 rounded-lg text-xl transition-colors shadow-lg">
+          <Link href="/checkin" className="block w-full text-center bg-brand-green hover:bg-green-700 text-white font-bold py-4 px-4 rounded-lg text-lg transition-colors shadow-lg">
             CHECK-IN DIARIO
           </Link>
 
@@ -73,7 +74,7 @@ export default async function DashboardPage() {
           </div>
 
           <div>
-            <h2 className="text-2xl font-bold text-white mb-4">Tu estado emocional (últimos 7 días)</h2>
+            <h2 className="text-xl sm:text-2xl font-bold text-white mb-4">Tu estado emocional (últimos 7 días)</h2>
             <div className="bg-dark-card p-4 rounded-xl h-64">
                 {last7DaysCheckins.length > 0 ? (
                     <EmotionChart data={last7DaysCheckins} />

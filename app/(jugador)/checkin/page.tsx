@@ -63,16 +63,16 @@ export default function CheckInPage() {
         />
         <span className="text-slate-400">5</span>
       </div>
-      <div className="text-center text-white font-bold text-xl mt-1">{value}</div>
+      <div className="text-center text-white font-bold text-lg sm:text-xl mt-1">{value}</div>
     </div>
   );
 
   return (
     <div className="space-y-8">
-      <h1 className="text-3xl font-bold text-white">Check-in Diario</h1>
+      <h1 className="text-2xl sm:text-3xl font-bold text-white">Check-in Diario</h1>
       <form onSubmit={handleSubmit} className="bg-dark-card p-6 rounded-lg space-y-8">
         <div>
-          <label className="block text-xl text-white mb-4 text-center">¿Cómo me siento hoy?</label>
+          <label className="block text-lg sm:text-xl text-white mb-4 text-center">¿Cómo me siento hoy?</label>
           <div className="flex justify-around">
             {feelings.map((f) => (
               <button
@@ -105,7 +105,7 @@ export default function CheckInPage() {
 
         {error && <p className="text-red-500 text-center">{error}</p>}
 
-        <button type="submit" disabled={loading} className="w-full bg-brand-green hover:bg-green-700 text-white font-bold py-3 px-4 rounded-lg text-xl transition-colors disabled:opacity-50">
+        <button type="submit" disabled={loading} className="w-full bg-brand-green hover:bg-green-700 text-white font-bold py-3 px-4 rounded-lg text-lg sm:text-xl transition-colors disabled:opacity-50">
           {loading ? 'Guardando...' : 'Guardar Check-in'}
         </button>
       </form>

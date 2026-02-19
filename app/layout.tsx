@@ -1,8 +1,10 @@
+
 // FIX: Import React to be in scope for React.ReactNode type.
 import React from 'react';
 import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
 import "./globals.css";
+import { UserProvider } from '@/context/UserContext';
 
 const poppins = Poppins({ 
   subsets: ["latin"],
@@ -12,6 +14,10 @@ const poppins = Poppins({
 export const metadata: Metadata = {
   title: "Mente en Juego",
   description: "Plataforma de bienestar mental para jóvenes deportistas.",
+  viewport: {
+    width: 'device-width',
+    initialScale: 1,
+  },
 };
 
 export default function RootLayout({
@@ -21,7 +27,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es">
-      <body className={poppins.className}>{children}</body>
+      <body className={poppins.className}>
+        <UserProvider>
+          {children}
+        </UserProvider>
+      </body>
     </html>
   );
 }

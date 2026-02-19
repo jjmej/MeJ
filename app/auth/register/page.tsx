@@ -1,3 +1,4 @@
+
 import { signup } from './actions'
 import RegisterForm from '@/components/auth/RegisterForm'
 import { createClient } from '@/lib/supabase/server'
@@ -25,8 +26,8 @@ export default async function RegisterPage({ searchParams }: { searchParams: { m
         <div className="min-h-screen bg-dark-bg flex flex-col items-center justify-center p-4 text-center">
             <div className="max-w-md w-full">
                 <div className="mb-8">
-                  <h1 className="text-4xl md:text-5xl font-bold text-white mb-2">Crea tu Cuenta</h1>
-                  <p className="text-lg text-slate-300">Únete a Mente en Juego</p>
+                  <h1 className="text-3xl sm:text-4xl font-bold text-white mb-2">Crea tu Cuenta</h1>
+                  <p className="text-md sm:text-lg text-slate-300">Únete a Mente en Juego</p>
                 </div>
                 {searchParams.message && <Messages message={searchParams.message} />}
                 <RegisterForm action={signup} />

@@ -1,3 +1,4 @@
+
 import React from 'react';
 import Link from 'next/link';
 import { ArrowLeftIcon } from '@heroicons/react/24/solid';
@@ -19,7 +20,7 @@ export default function ModulePageLayout({ backHref, backLabel, title, emoji, ch
           {backLabel}
       </Link>
       <div className="text-center">
-        <h1 className="text-3xl font-bold text-white">{title} {emoji}</h1>
+        <h1 className="text-2xl sm:text-3xl font-bold text-white">{title} {emoji}</h1>
       </div>
       <div className="bg-dark-card p-6 rounded-lg space-y-4 text-slate-300">
         {children}

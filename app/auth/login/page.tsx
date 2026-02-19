@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { login } from './actions'
 import { createClient } from '@/lib/supabase/server'
@@ -30,8 +31,8 @@ export default async function LoginPage({ searchParams }: { searchParams: { mess
     <div className="min-h-screen bg-dark-bg flex flex-col items-center justify-center p-4 text-center">
         <div className="max-w-md w-full space-y-4">
             <div>
-                <h1 className="text-4xl md:text-5xl font-bold text-white mb-2">Iniciar Sesión</h1>
-                <p className="text-lg text-slate-300">Bienvenido/a de vuelta a Mente en Juego</p>
+                <h1 className="text-3xl sm:text-4xl font-bold text-white mb-2">Iniciar Sesión</h1>
+                <p className="text-md sm:text-lg text-slate-300">Bienvenido/a de vuelta a Mente en Juego</p>
             </div>
             
             {searchParams.message && <Messages message={searchParams.message} type={searchParams.type} />}
@@ -39,20 +40,20 @@ export default async function LoginPage({ searchParams }: { searchParams: { mess
             <form action={login} className="w-full space-y-4">
                 <label className="sr-only" htmlFor="email">Email</label>
                 <input
-                    className="w-full bg-dark-card border border-slate-600 text-white rounded-lg p-3 text-center text-lg"
+                    className="w-full bg-dark-card border border-slate-600 text-white rounded-lg p-3 text-center text-base sm:text-lg"
                     name="email"
                     placeholder="email@ejemplo.com"
                     required
                 />
                 <label className="sr-only" htmlFor="password">Contraseña</label>
                 <input
-                    className="w-full bg-dark-card border border-slate-600 text-white rounded-lg p-3 text-center text-lg"
+                    className="w-full bg-dark-card border border-slate-600 text-white rounded-lg p-3 text-center text-base sm:text-lg"
                     type="password"
                     name="password"
                     placeholder="••••••••"
                     required
                 />
-                <button type="submit" className="w-full bg-brand-blue hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg text-xl transition-colors !mt-6">
+                <button type="submit" className="w-full bg-brand-blue hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg text-lg sm:text-xl transition-colors !mt-6">
                     Entrar
                 </button>
             </form>
